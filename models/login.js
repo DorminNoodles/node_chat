@@ -1,4 +1,4 @@
-// let db = require('models/db');
+let db = require('../models/db');
 
 class Login {
 
@@ -13,10 +13,31 @@ class Login {
 
 	}
 
-	connect(name, pwd){
-		this.name = name;
-		// db.connect_user(name, pwd);
+	connect(name, pwd, callback){
+
+		let self = this;
+
+		db.query('SELECT * FROM users WHERE name = ?', [name], function (error, results, fields) {
+			if (error) throw error;
+
+			if (results[0].name && results[0].password === pwd)
+			{
+				console.log('connection success !');
+				self.name = name;
+				self.authenticated = true;
+				callback(null);
+				// console.log(results.name);
+			}
+			callback('error');
+			// console.log("connection error !");
+
+		});
 	}
+
+	// set name(name)
+	// {
+	// 	this.name = name;
+	// }
 }
 
 
